@@ -1,0 +1,50 @@
+{
+  "name": "bitcoin-op-return",
+  "version": "1.0.0",
+  "description": "store and index btc signet OP_RETURN data",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc",
+    "dev": "ts-node ./src/server.ts",
+    "server": "node ./dist/src/server.js",
+    "indexer": "node ./dist/scripts/index.js",
+    "start-wo-btc": "docker compose up --build -d postgres && docker compose up --build -d server indexer && echo Indexing in background...",
+    "start": "docker compose up --build -d postgres bitcoin && sleep 5 && docker compose up --build -d server indexer && echo Indexing in background...",
+    "stop-wo-btc": "docker compose stop server postgres indexer",
+    "stop": "docker compose stop server postgres indexer bitcoin",
+    "destroy-wo-btc": "docker compose stop server postgres indexer && docker compose rm -f server postgres indexer",
+    "destroy": "docker compose stop server postgres indexer bitcoin && docker compose rm -f server postgres indexer bitcoin",
+    "test": "docker compose up --build -d postgres bitcoin && sleep 5 && npx jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ExodusMovementInterviews/Patrick-Ballarano.git"
+  },
+  "keywords": [],
+  "author": "Patrick Ballarano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ExodusMovementInterviews/Patrick-Ballarano/issues"
+  },
+  "homepage": "https://github.com/ExodusMovementInterviews/Patrick-Ballarano#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "@types/jest": "^29.2.4",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^16.18.8",
+    "@types/pg": "^8.6.5",
+    "@types/request": "^2.48.8",
+    "jest": "^29.3.1",
+    "ts-jest": "^29.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "bitcoinjs-lib": "^6.1.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "lodash": "^4.17.21",
+    "pg": "^8.8.0",
+    "request": "^2.88.2"
+  }
+}

@@ -1,0 +1,49 @@
+version: "3"
+services:
+  server:
+    container_name: server
+    build:
+      context: .
+      dockerfile: .Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      PG_URL: postgres://pg:12345@postgres:5432/btc_op_return
+      NODE_ENV: development
+      SERVER_PORT: 3000
+      RPC_USER: bitcoin
+      RPC_PASSWORD: password
+      RPC_HOST: bitcoin
+      RPC_PORT: 8332
+    ports:
+      - "3000:3000"
+  indexer:
+    container_name: indexer
+    build:
+      context: .
+      dockerfile: ./indexer/Dockerfile
+    environment:
+      PG_URL: postgres://pg:12345@postgres:5432/btc_op_return
+      RPC_USER: bitcoin
+      RPC_PASSWORD: password
+      RPC_HOST: bitcoin
+      RPC_PORT: 8332
+  postgres:
+    container_name: postgres
+    image: postgres:10.4
+    ports:
+      - "5432:5432"
+    volumes: 
+      - ./src/migrations/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql
+    restart: always
+    environment:
+      POSTGRES_USER: pg
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: btc_op_return
+  bitcoin:
+    container_name: bitcoin
+    image: patrickballarano/bitcoin-core:1.0.0
+    ports:
+    - "8332:8332"
+volumes:
+    db-data:
